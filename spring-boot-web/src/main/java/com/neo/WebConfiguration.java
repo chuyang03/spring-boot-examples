@@ -21,15 +21,18 @@ public class WebConfiguration {
     public RemoteIpFilter remoteIpFilter() {
         return new RemoteIpFilter();
     }
-    
+
+    //如果配置多个过滤器，那么每个过滤器都需要配置一个FilterRegistrationBean方法进行注册
     @Bean
     public FilterRegistrationBean testFilterRegistration() {
 
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(new MyFilter());
+        //表示任何请求路径都会经过这个过滤器
         registration.addUrlPatterns("/*");
         registration.addInitParameter("paramName", "paramValue");
         registration.setName("MyFilter");
+        //springboot会按照order的大小依次执行，从小到大开始执行
         registration.setOrder(1);
         return registration;
     }
@@ -46,6 +49,7 @@ public class WebConfiguration {
 			// TODO Auto-generated method stub
 			HttpServletRequest request = (HttpServletRequest) srequest;
 			System.out.println("this is MyFilter,url :"+request.getRequestURI());
+			//表示请求放行
 			filterChain.doFilter(srequest, sresponse);
 		}
 
